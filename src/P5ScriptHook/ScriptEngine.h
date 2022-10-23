@@ -23,10 +23,13 @@ struct tScriptContext
 	uint64_t m_nArguments[32];	// 058-158
 	uint8_t pad4[0x80];			// 158-1D8
 	uint32_t m_nReturn = 0;		// 1D8-1DC
-	uint8_t pad5[0x400];		// 1DC-4DC massive pad since im not sure how big this is
+	uint8_t pad5[0x48];			// 1DC-224
+	uint32_t m_nWaitingFlag;	// 224-228
+	uint8_t pad6[0x200];		// 228-428 massive pad since im not sure how big this is
 };
 VALIDATE_OFFSET(tScriptContext, m_nNumArgs, 0x2C);
 VALIDATE_OFFSET(tScriptContext, m_nArgTypes, 0x2F);
 VALIDATE_OFFSET(tScriptContext, m_nArguments, 0x58);
 VALIDATE_OFFSET(tScriptContext, m_nReturn, 0x1D8);
+VALIDATE_OFFSET(tScriptContext, m_nWaitingFlag, 0x224);
 auto& g_pScriptContext = AddressSetter::GetRefFromRelative<tScriptContext*>(mem::FindPattern("41 8D 40 01 48 63 C8 B8 01 00 00 00 C6 42 5F 00 48 89 8A D8 01 00 00 C3") - 0x4);

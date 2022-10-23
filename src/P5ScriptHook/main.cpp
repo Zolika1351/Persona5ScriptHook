@@ -9,9 +9,14 @@
 #include "ModUtils/MemoryMgr.h"
 #include "ModUtils/Trampoline.h"
 
+class tScriptContext;
+LPVOID g_pMainFiber = 0;
+void SetScriptContext();
+
+#include "Scripts.h"
 #include "Game.h"
 #include "Logging.h"
-#include "Scripts.h"
+#include "Scripts.cpp"
 #include "Hook.h"
 #include "Exports.h"
 

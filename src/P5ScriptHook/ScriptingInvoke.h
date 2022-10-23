@@ -1,10 +1,10 @@
 namespace ScriptingInvoke
 {
-	tScriptContext pOurContext;
+	tScriptContext* pOurContext = nullptr;
 
 	void ClearScriptContext()
 	{
-		memset(&pOurContext, 0, sizeof(tScriptContext));
+		memset(pOurContext, 0, sizeof(tScriptContext));
 	}
 
 	auto GetScriptFunc(int id)
@@ -18,23 +18,38 @@ namespace ScriptingInvoke
 	{
 		auto addr = GetScriptFunc(id)->m_pFunc;
 
-		g_pScriptContext = &pOurContext;
-		((void(*)())(addr))();
-		g_pScriptContext = nullptr;
-		return &pOurContext.m_nReturn;
+		auto context = pOurContext;
+
+		bool ret = 0;
+		while (!ret)
+		{
+			pOurContext = context;
+
+			g_pScriptContext = pOurContext;
+			ret = ((bool(*)())(addr))();
+			g_pScriptContext = nullptr;
+
+			if (!ret)
+			{
+				pOurContext->m_nWaitingFlag = 0x7FFFFFFF;
+				SwitchToFiber(g_pMainFiber);
+			}
+		}
+
+		return &pOurContext->m_nReturn;
 	}
 
 	template<bool isFloat, typename T>
 	void SetArgument(int id, int type, T value)
 	{
 		// double -> float
-		if constexpr (isFloat) *(float*)&pOurContext.m_nArguments[pOurContext.m_nNumArgs - id] = value;
-		else *(T*)&pOurContext.m_nArguments[pOurContext.m_nNumArgs - id] = value;
-		pOurContext.m_nArgTypes[pOurContext.m_nNumArgs - id] = type;
+		if constexpr (isFloat) *(float*)&pOurContext->m_nArguments[pOurContext->m_nNumArgs - id] = value;
+		else *(T*)&pOurContext->m_nArguments[pOurContext->m_nNumArgs - id] = value;
+		pOurContext->m_nArgTypes[pOurContext->m_nNumArgs - id] = type;
 	}
 
 	void SetArgCount(int count)
 	{
-		pOurContext.m_nNumArgs = count;
+		pOurContext->m_nNumArgs = count;
 	}
 }
