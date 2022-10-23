@@ -1,0 +1,3 @@
+[submodule "src/P5ScriptHook/ModUtils"]
+	path = src/P5ScriptHook/ModUtils
+	url = https://github.com/CookiePLMonster/ModUtils
