@@ -6,12 +6,9 @@
 #include <ostream>
 #include <vector>
 #include <Psapi.h>
+#include <d3d11.h>
 #include "ModUtils/MemoryMgr.h"
 #include "ModUtils/Trampoline.h"
-
-class tScriptContext;
-LPVOID g_pMainFiber = 0;
-void SetScriptContext();
 
 #include "Scripts.h"
 #include "Game.h"

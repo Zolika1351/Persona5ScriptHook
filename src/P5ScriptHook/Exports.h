@@ -1,12 +1,38 @@
-extern "C" __declspec(dllexport) void __cdecl RegisterScript(void(*function)(), char* name)
+void RegisterScript(void(*function)(), char* name, std::vector<tScriptHookScript*>& scripts, char* typeName)
 {
 	if (!function) return;
 
 	auto script = new tScriptHookScript;
 	script->m_pFunction = function;
 	script->m_sName = name;
-	g_aScripts.push_back(script);
-	WriteToLog("[" + (name ? (std::string)name : "Unnamed") + "] Script loaded");
+	scripts.push_back(script);
+	WriteToLog("[" + (name ? (std::string)name : "Unnamed") + "] Script loaded (" + (std::string)typeName + ")");
+}
+
+extern "C" __declspec(dllexport) void __cdecl RegisterScript(void(*function)(), char* name)
+{
+	RegisterScript(function, name, g_aScripts, "Main");
+}
+
+extern "C" __declspec(dllexport) void __cdecl RegisterScriptDXPresent(void(*function)(), char* name)
+{
+	RegisterScript(function, name, g_aDXPresentScripts, "DirectX Present");
+}
+
+extern "C" __declspec(dllexport) void __cdecl RegisterScriptDXReset(void(*function)(), char* name)
+{
+	RegisterScript(function, name, g_aDXResetScripts, "DirectX Reset");
+}
+
+extern "C" __declspec(dllexport) void __cdecl RegisterScriptWndProc(WNDPROC function, char* name)
+{
+	if (!function) return;
+
+	auto script = new tWndProcHook;
+	script->m_pFunction = function;
+	script->m_sName = name;
+	g_aWndProcHooks.push_back(script);
+	WriteToLog("[" + (name ? (std::string)name : "Unnamed") + "] Script loaded (WndProc)");
 }
 
 extern "C" __declspec(dllexport) void __cdecl InitScriptContext()
@@ -48,4 +74,14 @@ extern "C" __declspec(dllexport) int __cdecl GetSequence()
 {
 	if (!g_pSequenceInfo || !g_pSequenceInfo->m_pInfo) return 1;
 	return g_pSequenceInfo->m_pInfo->m_nSequenceId;
+}
+
+extern "C" __declspec(dllexport) IDXGISwapChain* __cdecl GetSwapChain()
+{
+	return g_pSwapChain;
+}
+
+extern "C" __declspec(dllexport) HWND __cdecl GetGameHWND()
+{
+	return ghWnd;
 }

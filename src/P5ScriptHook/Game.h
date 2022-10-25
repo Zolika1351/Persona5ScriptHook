@@ -6,6 +6,8 @@
 #include "ScriptEngine.h"
 #include "ScriptingInvoke.h"
 
+auto& ghWnd = AddressSetter::GetRefFromRelative<HWND>(mem::FindPattern("D1 F8 8B F8 C7 44 24 28 00 00 00 00") - 0x4);
+
 auto& g_fFrametime = AddressSetter::GetRefFromRelative<float>(mem::FindPattern("FF 81 B0 0B 00 00 4C 8D 71 48 33 FF") - 0xE);
 
 struct tSequenceStruct

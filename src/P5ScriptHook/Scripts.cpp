@@ -13,16 +13,13 @@ static void WINAPI FiberStartAddress(LPVOID lpFiberParameter)
 	}
 }
 
-void ProcessScripts()
+void ProcessScripts(std::vector<tScriptHookScript*>& scripts)
 {
 	if (!g_pMainFiber) g_pMainFiber = GetCurrentFiber();
 
-	for (auto script : g_aScripts)
+	for (auto script : scripts)
 	{
-		if (!script->g_pFiberThread)
-		{
-			script->g_pFiberThread = CreateFiber(0, FiberStartAddress, script);
-		}
+		if (!script->g_pFiberThread) script->g_pFiberThread = CreateFiber(0, FiberStartAddress, script);
 		SwitchToFiber(script->g_pFiberThread);
 	}
 }
