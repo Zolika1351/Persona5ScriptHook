@@ -1,3 +1,6 @@
 [submodule "src/P5ScriptHook/ModUtils"]
 	path = src/P5ScriptHook/ModUtils
 	url = https://github.com/CookiePLMonster/ModUtils
+[submodule "examples/ImGuiExample/imgui"]
+	path = examples/ImGuiExample/imgui
+	url = https://github.com/ocornut/imgui
