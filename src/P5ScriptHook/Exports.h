@@ -85,3 +85,9 @@ extern "C" __declspec(dllexport) HWND __cdecl GetGameHWND()
 {
 	return ghWnd;
 }
+
+extern "C" __declspec(dllexport) int __cdecl GetFadeState()
+{
+	if (!g_pFadeInfo || !g_pFadeInfo->m_pFade) return -1;
+	return g_pFadeInfo->m_pFade->m_nFadeState;
+}

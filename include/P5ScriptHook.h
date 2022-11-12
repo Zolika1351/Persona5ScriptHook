@@ -31,6 +31,8 @@ extern "C" int __cdecl GetSequence();
 extern "C" IDXGISwapChain* __cdecl GetSwapChain();
 // get the game's HWND
 extern "C" HWND __cdecl GetGameHWND();
+// get the screen fade state (3 - faded in, any other value is either fading in, fading out, or fully faded out)
+extern "C" int __cdecl GetFadeState();
 
 #include "ScriptingInvoke.h"
 #include "ScriptingFunctions.h"
